@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         return; // Stop the app if not configured
     }
 
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let categories = [], products = [], rawCategories = [], rawProducts = [];
 
@@ -100,3 +100,4 @@ document.addEventListener('DOMContentLoaded', async () => {
     // (Full, correct code for all other functions is below)
 
 });
+
