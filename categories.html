@@ -21,11 +21,35 @@
         </div>
     </header>
     <main class="container">
-        <div class="controls"><button id="add-category-btn" class="button-primary"><i class="fas fa-plus"></i> Add New Category</button></div>
+        <div class="controls">
+            <button id="add-category-btn" class="button-primary"><i class="fas fa-plus"></i> Add New Category</button>
+        </div>
         <div id="category-grid" class="category-grid"></div>
         <p id="no-categories-message" class="hidden">No categories found.</p>
     </main>
-    <div id="category-modal" class="modal-overlay hidden"><!-- Modal content is the same --></div>
+    <div id="category-modal" class="modal-overlay hidden">
+        <div class="modal-content" style="max-width: 500px;">
+            <button class="modal-close-btn">&times;</button>
+            <h2 id="category-modal-title">Add New Category</h2>
+            <form id="category-form">
+                <input type="hidden" id="category-id">
+                <div class="form-group image-uploader">
+                    <label>Category Image</label>
+                    <div id="category-image-preview" class="image-previews"></div>
+                    <div class="image-buttons">
+                        <label for="category-image-upload" class="button-secondary"><i class="fas fa-upload"></i> Choose Image</label>
+                        <button type="button" id="remove-image-btn" class="button-danger hidden"><i class="fas fa-times"></i> Remove Image</button>
+                    </div>
+                    <input type="file" id="category-image-upload" accept="image/*">
+                </div>
+                <div class="form-group"><label for="category-name">Category Name</label><input type="text" id="category-name" required></div>
+                <div class="form-actions">
+                    <button type="button" id="delete-category-btn" class="button-danger hidden"><i class="fas fa-trash"></i> Delete</button>
+                    <button type="submit" class="button-primary"><i class="fas fa-save"></i> Save Category</button>
+                </div>
+            </form>
+        </div>
+    </div>
     <script src="app.js"></script>
 </body>
 </html>
