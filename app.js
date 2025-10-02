@@ -77,11 +77,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function initGenericCategoriesPage(systemName, categoriesRef, productsRef, productPageUrl) {
-        const grid = document.getElementById('category-grid');
-        const modal = document.getElementById('category-modal');
-        const form = document.getElementById('category-form');
-        const addBtn = document.getElementById('add-category-btn');
-        const removeImageBtn = document.getElementById('remove-image-btn');
+        const grid = document.getElementById('category-grid'), modal = document.getElementById('category-modal'), form = document.getElementById('category-form'), addBtn = document.getElementById('add-category-btn'), removeImageBtn = document.getElementById('remove-image-btn');
         let categoryImage = "";
 
         const renderCategories = () => {
@@ -97,7 +93,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 grid.appendChild(card);
             });
         };
-
         const openCategoryModal = (catId = null) => {
             form.reset();
             const preview = document.getElementById('category-image-preview'), titleEl = document.getElementById('category-modal-title'), idEl = document.getElementById('category-id'), nameEl = document.getElementById('category-name'), deleteBtn = document.getElementById('delete-category-btn');
@@ -127,18 +122,19 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!name) { alert('Category name is required.'); return; }
             const isProducts = systemName === 'Products';
             const tableName = isProducts ? 'categories' : 'raw_material_categories';
-            const idPrefix = isProducts ? 'prod-cat' : 'raw-cat';
             let error;
             if (id) {
-                ({ error } = await supabase.from(tableName).update({ name: name, image: categoryImage }).eq('id', id));
+                const { data: updatedCategory, error: updateError } = await supabase.from(tableName).update({ name: name, image: categoryImage }).eq('id', id).select().single();
+                error = updateError;
+                if (!error) { const index = categoriesRef.findIndex(c => c.id === id); if (index > -1) categoriesRef[index] = updatedCategory; }
             } else {
-                const newCategory = { name: name, image: categoryImage };
-                ({ error } = await supabase.from(tableName).insert(newCategory));
+                const { data: newCategory, error: insertError } = await supabase.from(tableName).insert({ name: name, image: categoryImage }).select().single();
+                error = insertError;
+                if (!error) categoriesRef.push(newCategory);
             }
             if (error) { alert(error.message); } 
-            else { await loadAllData(); renderCategories(); modal.classList.add('hidden'); }
+            else { renderCategories(); modal.classList.add('hidden'); }
         });
-
         document.getElementById('delete-category-btn').addEventListener('click', async () => {
             const id = document.getElementById('category-id').value;
             if (confirm(`Are you sure? This will delete the category and all items inside it.`)) {
@@ -146,7 +142,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const tableName = isProducts ? 'categories' : 'raw_material_categories';
                 const { error } = await supabase.from(tableName).delete().eq('id', id);
                 if (error) { alert(error.message); } 
-                else { await loadAllData(); renderCategories(); modal.classList.add('hidden'); }
+                else { const index = categoriesRef.findIndex(c => c.id === id); if (index > -1) categoriesRef.splice(index, 1); renderCategories(); modal.classList.add('hidden'); }
             }
         });
         renderCategories();
@@ -195,8 +191,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!sku) { alert('SKU is required.'); return; } if (!id && productsRef.some(p => p.id === sku)) { alert('SKU already exists.'); return; }
             const productData = { id: id || sku, category_id: document.getElementById('product-category').value, name: document.getElementById('product-name').value.trim(), images: uploadedImages, quantity: parseInt(document.getElementById('product-quantity').value, 10) || 0, price: parseFloat(document.getElementById('product-price').value) || 0, low_stock_threshold: parseInt(document.getElementById('low-stock-threshold').value, 10) || 0, components: currentComponents };
             let error;
-            if (id) { ({ error } = await supabase.from(tableName).update(productData).eq('id', id)); } else { ({ error } = await supabase.from(tableName).insert(productData)); }
-            if (error) { alert(error.message); } else { await loadAllData(); renderProducts(); closeEditModal(); }
+            if (id) {
+                const { data: updatedProduct, error: updateError } = await supabase.from(tableName).update(productData).eq('id', id).select().single();
+                error = updateError;
+                if (!error) { const index = productsRef.findIndex(p => p.id === id); if (index > -1) productsRef[index] = updatedProduct; }
+            } else {
+                const { data: newProduct, error: insertError } = await supabase.from(tableName).insert(productData).select().single();
+                error = insertError;
+                if (!error) productsRef.push(newProduct);
+            }
+            if (error) { alert(error.message); } else { renderProducts(); closeEditModal(); }
         };
         const openStockModal = (productId) => { const product = productsRef.find(p => p.id === productId); if (!product) return; document.getElementById('stock-product-id').value = productId; document.getElementById('stock-modal-product-name').textContent = product.name; const list = document.getElementById('stock-variant-list'); list.innerHTML = ''; const mainItem = document.createElement('div'); mainItem.className = 'stock-variant-item main-product'; mainItem.innerHTML = `<label for="stock-qty-main">${product.name} (Main)</label><div class="quantity-input"><button type="button" class="quantity-btn" data-action="decrement">-</button><input type="number" id="stock-qty-main" value="${product.quantity}" min="0" data-name="--main--"><button type="button" class="quantity-btn" data-action="increment">+</button></div>`; list.appendChild(mainItem);(product.components || []).forEach(c => { const item = document.createElement('div'); item.className = 'stock-variant-item'; const safeNameId = c.name.replace(/[^a-zA-Z0-9]/g, ''); item.innerHTML = `<label for="stock-qty-${safeNameId}">${c.name}</label><div class="quantity-input"><button type="button" class="quantity-btn" data-action="decrement">-</button><input type="number" id="stock-qty-${safeNameId}" value="${c.quantity}" min="0" data-name="${c.name}"><button type="button" class="quantity-btn" data-action="increment">+</button></div>`; list.appendChild(item); }); stockModal.classList.remove('hidden'); };
         const handleStockFormSubmit = async (event) => {
@@ -204,11 +208,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             const updates = {};
             document.getElementById('stock-variant-list').querySelectorAll('input[type="number"]').forEach(input => { const name = input.dataset.name; const newQuantity = parseInt(input.value, 10); if (name === '--main--') { updates.quantity = newQuantity; } else { const compIndex = (product.components || []).findIndex(c => c.name === name); if (compIndex > -1) product.components[compIndex].quantity = newQuantity; } });
             updates.components = product.components;
-            const { error } = await supabase.from(tableName).update(updates).eq('id', productId);
-            if(error) { alert(error.message); } else { await loadAllData(); renderProducts(); closeStockModal(); }
+            const { data: updatedProduct, error } = await supabase.from(tableName).update(updates).eq('id', productId).select().single();
+            if(error) { alert(error.message); }
+            else { const index = productsRef.findIndex(p => p.id === productId); if (index > -1) productsRef[index] = updatedProduct; renderProducts(); closeStockModal(); }
         };
         const handleImageUpload = (event) => { Array.from(event.target.files).forEach(file => { const reader = new FileReader(); reader.onloadend = () => { uploadedImages.push(reader.result); renderImagePreviews(); }; reader.readAsDataURL(file); }); };
-        const handleDelete = async () => { const id = document.getElementById('product-id').value; if (confirm(`Are you sure you want to delete this item?`)) { const { error } = await supabase.from(tableName).delete().eq('id', id); if (error) { alert(error.message); } else { await loadAllData(); renderProducts(); closeEditModal(); } } };
+        const handleDelete = async () => { const id = document.getElementById('product-id').value; if (confirm(`Are you sure you want to delete this item?`)) { const { error } = await supabase.from(tableName).delete().eq('id', id); if (error) { alert(error.message); } else { const index = productsRef.findIndex(p => p.id === id); if (index > -1) productsRef.splice(index, 1); renderProducts(); closeEditModal(); } } };
         const handleAddComponent = () => { const name = document.getElementById('component-name').value.trim(); const quantity = parseInt(document.getElementById('component-quantity').value, 10) || 0; if (!name) { alert('Component Name is required.'); return; } if ((currentComponents || []).some(c => c.name.toLowerCase() === name.toLowerCase())) { alert('Component Name must be unique.'); return; } if(!currentComponents) currentComponents = []; currentComponents.push({ name, quantity }); renderComponentsInModal(); document.getElementById('component-name').value = ''; document.getElementById('component-quantity').value = ''; };
 
         productGrid.addEventListener('click', (event) => { const btn = event.target.closest('.action-btn'); if (btn) { if (btn.dataset.action === 'manage') openStockModal(btn.dataset.id); else if (btn.dataset.action === 'edit') openEditModal(btn.dataset.id); } });
