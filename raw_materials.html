@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raw Materials</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body id="raw-products-page">
+    <header class="main-header">
+        <div class="container">
+            <h1 id="page-title"><i class="fas fa-tools"></i> Raw Materials</h1>
+            <nav>
+                <a href="index.html">Dashboard</a>
+                <a href="categories.html">Products</a>
+                <a href="raw_material_categories.html" class="active">Raw Materials</a>
+                <button id="logout-btn" class="button-danger">Logout</button>
+            </nav>
+        </div>
+    </header>
+    <main class="container">
+        <div class="controls"><div class="search-container"><i class="fas fa-search"></i><input type="search" id="search-bar" placeholder="Search by name or SKU..."></div><button id="add-product-btn" class="button-primary"><i class="fas fa-plus"></i> Add New Item</button></div>
+        <div id="product-grid"></div>
+        <p id="no-products-message" class="hidden">No items found in this category.</p>
+    </main>
+    <div id="product-modal" class="modal-overlay hidden"><!-- Modal content is the same --></div>
+    <div id="manage-stock-modal" class="modal-overlay hidden"><!-- Modal content is the same --></div>
+    <script src="app.js"></script>
+</body>
+</html>

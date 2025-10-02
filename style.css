@@ -1,0 +1,29 @@
+/* --- Global Styles & Variables --- */
+:root { --primary-color: #4A90E2; --primary-hover: #357ABD; --secondary-color: #F5F7FA; --danger-color: #D0021B; --danger-hover: #B00216; --success-color: #7ED321; --warning-color: #F5A623; --text-color: #333; --border-color: #E0E6ED; --card-bg: #FFFFFF; --shadow: 0 4px 12px rgba(0, 0, 0, 0.08); --border-radius: 8px; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--secondary-color); color: var(--text-color); line-height: 1.6; }
+.container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+.hidden { display: none !important; }
+
+/* --- Login Page --- */
+.login-container { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+.login-card { background-color: var(--card-bg); padding: 40px; border-radius: var(--border-radius); box-shadow: var(--shadow); width: 100%; max-width: 400px; text-align: center; }
+.login-card h1 { margin-bottom: 10px; color: var(--primary-color); }
+.login-card p { margin-bottom: 25px; color: #666; }
+.login-btn { width: 100%; margin-top: 15px; }
+.error-message { color: var(--danger-color); font-weight: 500; font-size: 0.9rem; margin-top: 10px; }
+#login-form .form-group label { text-align: left; }
+
+/* --- Header & Navigation --- */
+.main-header .container { display: flex; justify-content: space-between; align-items: center; padding-top: 15px; padding-bottom: 15px; }
+.main-header h1 { font-size: 1.5rem; color: var(--primary-color); white-space: nowrap; }
+.main-header h1 i { margin-right: 10px; }
+.main-header nav { display: flex; gap: 10px; align-items: center; }
+.main-header nav a, .main-header nav button { text-decoration: none; color: var(--text-color); padding: 10px 15px; border-radius: var(--border-radius); transition: background-color 0.2s; font-weight: 500; background: none; border: none; font-size: 1rem; font-family: inherit; }
+.main-header nav a:hover { background-color: var(--secondary-color); }
+.main-header nav a.active { background-color: var(--primary-color); color: white; }
+#logout-btn { padding: 8px 15px; font-size: 0.9rem; }
+
+/* All other styles are the same as before */
+.button-primary, .button-secondary, .button-danger { padding: 10px 20px; border-radius: var(--border-radius); cursor: pointer; font-size: 1rem; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+/* ... (rest of the CSS is the same as the last correct version) ... */

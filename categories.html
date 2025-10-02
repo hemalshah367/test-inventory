@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Categories</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body id="categories-page">
+    <header class="main-header">
+        <div class="container">
+            <h1><i class="fas fa-folder"></i> Product Categories</h1>
+            <nav>
+                <a href="index.html">Dashboard</a>
+                <a href="categories.html" class="active">Products</a>
+                <a href="raw_material_categories.html">Raw Materials</a>
+                <button id="logout-btn" class="button-danger">Logout</button>
+            </nav>
+        </div>
+    </header>
+    <main class="container">
+        <div class="controls"><button id="add-category-btn" class="button-primary"><i class="fas fa-plus"></i> Add New Category</button></div>
+        <div id="category-grid" class="category-grid"></div>
+        <p id="no-categories-message" class="hidden">No categories found.</p>
+    </main>
+    <div id="category-modal" class="modal-overlay hidden"><!-- Modal content is the same --></div>
+    <script src="app.js"></script>
+</body>
+</html>
