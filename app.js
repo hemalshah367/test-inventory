@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', async () => {
     console.log("Checkpoint 1: DOMContentLoaded event fired. app.js is running.");
 
-    const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-    const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
+    const SUPABASE_URL = 'https://kcdgshenzcazfhchgysi.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtjZGdzaGVuemNhemZoY2hneXNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ4NDIxNzIsImV4cCI6MjA3MDQxODE3Mn0.uJMrKeg3uELaDtJ67fefeMo3-lwOFp52pvB_7uFmCKc';
 
     if (!SUPABASE_URL || SUPABASE_URL === 'YOUR_SUPABASE_URL') {
         console.error("STOP: Supabase URL & Key not configured.");
@@ -102,3 +102,4 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- PASTE THE FULL, CORRECT CODE FROM THE PREVIOUS "FINAL" VERSION HERE ---
     // Make sure all functions are complete.
 });
+
