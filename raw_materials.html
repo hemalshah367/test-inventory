@@ -25,8 +25,28 @@
         <div id="product-grid"></div>
         <p id="no-products-message" class="hidden">No items found in this category.</p>
     </main>
-    <div id="product-modal" class="modal-overlay hidden"><!-- Modal content is the same --></div>
-    <div id="manage-stock-modal" class="modal-overlay hidden"><!-- Modal content is the same --></div>
+    <div id="product-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button class="modal-close-btn">&times;</button>
+            <h2 id="modal-title">Add New Item</h2>
+            <form id="product-form">
+                 <input type="hidden" id="product-id">
+                 <div class="form-group"><label for="product-category">Category</label><select id="product-category" required></select></div>
+                <div class="form-group image-uploader"><label>Item Images</label><div id="image-previews" class="image-previews"></div><input type="file" id="image-upload" accept="image/*" multiple><label for="image-upload" class="button-secondary"><i class="fas fa-upload"></i> Choose Images</label></div>
+                <div class="form-row"><div class="form-group"><label for="product-name">Item Name</label><input type="text" id="product-name" required></div><div class="form-group"><label for="product-sku">Item SKU / ID</label><input type="text" id="product-sku" required></div></div>
+                <hr class="section-divider">
+                <div class="form-row"><div class="form-group"><label for="product-quantity">Length (Meters)</label><div class="quantity-input"><button type="button" class="quantity-btn" data-action="decrement">-</button><input type="number" id="product-quantity" value="0" min="0"><button type="button" class="quantity-btn" data-action="increment">+</button></div></div><div class="form-group"><label for="product-price">Price per Meter (₹)</label><input type="number" id="product-price" step="0.01" min="0" value="0"></div><div class="form-group"><label for="low-stock-threshold">Low Stock Threshold</label><input type="number" id="low-stock-threshold" min="0" value="5"></div></div>
+                <div class="variants-section"><h4>Sub-Components (if any)</h4><div id="component-list" class="variant-list"></div><div class="add-variant-form"><input type="text" id="component-name" placeholder="Component Name"><input type="number" id="component-quantity" placeholder="Qty" min="0"><button type="button" id="add-component-btn" class="button-secondary">Add</button></div></div>
+                <div class="form-actions"><button type="button" id="delete-product-btn" class="button-danger hidden"><i class="fas fa-trash"></i> Delete</button><button type="submit" class="button-primary"><i class="fas fa-save"></i> Save Item</button></div>
+            </form>
+        </div>
+    </div>
+    <div id="manage-stock-modal" class="modal-overlay hidden">
+        <div class="modal-content" style="max-width: 500px;">
+            <button class="modal-close-btn">&times;</button><h2 id="stock-modal-title">Manage Stock</h2><p id="stock-modal-product-name" class="stock-modal-product-name"></p>
+            <form id="stock-form"><input type="hidden" id="stock-product-id"><div id="stock-variant-list" class="stock-variant-list"></div><div class="form-actions"><button type="submit" class="button-primary"><i class="fas fa-save"></i> Save Changes</button></div></form>
+        </div>
+    </div>
     <script src="app.js"></script>
 </body>
 </html>
